@@ -5,7 +5,7 @@
 %global  nginx_release       3
 
 %global  module_name         nginx-mod-http-unchunk
-%global  module_version      0.1.0
+%global  module_version      0.1.1
 
 # gperftools exist only on selected arches
 %ifnarch s390 s390x

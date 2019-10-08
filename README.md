@@ -1,6 +1,6 @@
 # NGINX HTTP unchunk module
 
-sets Content-Length header for cached response so that browsers can estimate download time.
+allows range request for cached response that was recieved from upstream with Transfer-Encoding: chunked.
 
 ## Example Configuration
 
@@ -31,5 +31,3 @@ http {
 |Syntax |**proxy_cache_unchunk** on \| off|
 |Default|proxy_cache_unchunk off          |
 |Context|http, server, location           |
-
-Sets Content-Length header for cached response that was recieved from upstream with Transfer-Encoding: chunked.
