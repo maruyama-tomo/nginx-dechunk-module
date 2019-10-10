@@ -5,7 +5,7 @@
 %global  nginx_release       3
 
 %global  module_name         nginx-mod-http-unchunk
-%global  module_version      0.1.1
+%global  module_version      0.1.2
 
 # gperftools exist only on selected arches
 %ifnarch s390 s390x
@@ -139,5 +139,11 @@ fi
 
 
 %changelog
+* Thu Oct 10 2019 MALU <contact@andantissimo.jp> - 0.1.2-1
+- Update to 0.1.2
+
+* Wed Oct 09 2019 MALU <contact@andantissimo.jp> - 0.1.1-1
+- Update to 0.1.1
+
 * Sat Oct 05 2019 MALU <contact@andantissimo.jp> - 0.1.0-1
 - Release

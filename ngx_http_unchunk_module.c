@@ -56,7 +56,8 @@ static ngx_int_t ngx_http_unchunk_filter(ngx_http_request_t *r)
     if (conf->proxy_cache_unchunk) {
         if (r->cache && r->cache->length > (off_t)r->cache->body_start) {
             r->allow_ranges = 1;
-            r->headers_out.content_length_n = r->cache->length - r->cache->body_start;
+            if (r->headers_out.content_length_n == -1)
+                r->headers_out.content_length_n = r->cache->length - r->cache->body_start;
         }
     }
     return ngx_http_next_header_filter(r);
