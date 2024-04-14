@@ -61,7 +61,7 @@ static ngx_int_t ngx_http_dechunk_filter(ngx_http_request_t *r)
 
     if (r->upstream->cache_status == NGX_HTTP_CACHE_MISS ||
         r->upstream->cache_status == NGX_HTTP_CACHE_EXPIRED ||
-        r->upstream->cache_status == NGX_HTTP_CACHE_BYPASS ||) {
+        r->upstream->cache_status == NGX_HTTP_CACHE_BYPASS) {
         return ngx_http_next_header_filter(r);
     }
 
