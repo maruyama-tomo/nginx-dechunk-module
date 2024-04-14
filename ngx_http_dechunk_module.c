@@ -50,18 +50,33 @@ ngx_module_t ngx_http_dechunk_module = {
 
 static ngx_http_output_header_filter_pt  ngx_http_next_header_filter;
 
+
 static ngx_int_t ngx_http_dechunk_filter(ngx_http_request_t *r)
 {
     ngx_http_dechunk_loc_conf_t *conf = ngx_http_get_module_loc_conf(r, ngx_http_dechunk_module);
-    if (conf->proxy_cache_dechunk) {
-        if (r->cache && r->cache->length > (off_t)r->cache->body_start) {
-            r->allow_ranges = 1;
-            if (r->headers_out.content_length_n == -1)
-                r->headers_out.content_length_n = r->cache->length - r->cache->body_start;
-        }
+
+    if (!conf->proxy_cache_dechunk || r->upstream == NULL || r->cache == NULL) {
+        return ngx_http_next_header_filter(r);
     }
+
+    if (r->upstream->cache_status == NGX_HTTP_CACHE_MISS ||
+        r->upstream->cache_status == NGX_HTTP_CACHE_EXPIRED ||
+        r->upstream->cache_status == NGX_HTTP_CACHE_BYPASS ||) {
+        return ngx_http_next_header_filter(r);
+    }
+
+    if (r->cache->length <= (off_t)r->cache->body_start) {
+        return ngx_http_next_header_filter(r);
+    }
+
+    r->allow_ranges = 1;
+    if (r->headers_out.content_length_n == -1) {
+        r->headers_out.content_length_n = r->cache->length - r->cache->body_start;
+    }
+
     return ngx_http_next_header_filter(r);
 }
+
 
 static ngx_int_t ngx_http_dechunk_init(ngx_conf_t *cf)
 {
@@ -69,6 +84,7 @@ static ngx_int_t ngx_http_dechunk_init(ngx_conf_t *cf)
     ngx_http_top_header_filter = ngx_http_dechunk_filter;
     return NGX_OK;
 }
+
 
 static void *ngx_http_dechunk_create_loc_conf(ngx_conf_t *cf)
 {
@@ -78,6 +94,7 @@ static void *ngx_http_dechunk_create_loc_conf(ngx_conf_t *cf)
     conf->proxy_cache_dechunk = NGX_CONF_UNSET;
     return conf;
 }
+
 
 static char *ngx_http_dechunk_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
 {
