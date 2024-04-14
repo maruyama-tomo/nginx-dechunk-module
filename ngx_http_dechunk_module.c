@@ -69,8 +69,10 @@ static ngx_int_t ngx_http_dechunk_filter(ngx_http_request_t *r)
         return ngx_http_next_header_filter(r);
     }
 
-    if (r->headers_out.content_encoding == NULL || r->headers_out.content_encoding->value.len == 0) {
-        r->allow_ranges = 1;
+    r->allow_ranges = 1;
+
+    if (r->headers_out.content_encoding && r->headers_out.content_encoding->value.len > 0) {
+        r->allow_ranges = 0;
     }
 
     if (r->headers_out.content_length_n == -1) {
