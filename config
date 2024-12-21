@@ -1,25 +1,7 @@
 ngx_module_type=HTTP_AUX_FILTER
 ngx_module_name=ngx_http_cache_dechunk_filter_module
 ngx_module_srcs="$ngx_addon_dir/$ngx_module_name.c"
-ngx_module_order="$ngx_module_name \
-                  ngx_http_copy_filter_module \
-                  ngx_http_range_body_filter_module \
-                  ngx_http_not_modified_filter_module \
-                  ngx_http_slice_filter_module"
 
 . auto/module
 
 ngx_addon_name=$ngx_module_name
-
-if [ "$ngx_module_link" != DYNAMIC ]; then
-    HTTP_AUX_FILTER_MODULES=`echo "$HTTP_AUX_FILTER_MODULES" \
-                        | sed "s/ $ngx_module_name//" \
-                        | sed "s/^$ngx_module_name //" \
-                        | sed "s/$ngx_module_name//"`
-
-    if [ -z "$HTTP_AUX_FILTER_MODULES" ]; then
-        HTTP_AUX_FILTER_MODULES="$ngx_module_name"
-    else
-        HTTP_AUX_FILTER_MODULES="$HTTP_AUX_FILTER_MODULES $ngx_module_name"
-    fi
-fi
